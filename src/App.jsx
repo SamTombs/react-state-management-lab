@@ -3,7 +3,7 @@ import "./App.css";
 
 const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [team, setTeam] = useState();
+  const [team, setTeam] = useState([]);
   const [money, setMoney] = useState(100);
   const [zombieFighters, setZombieFighters] = useState([
     {
@@ -91,30 +91,51 @@ const App = () => {
 
   const handleAddFighter = (zombieFighter) => {
     const newZombieArray = [...zombieFighters, zombieFighter];
-    setZombieFighters(newZombieArray);
+    console.log(newZombieArray);
+    setZombieFighters(prevState => [...prevState])
+    setTeam(prevState => [...prevState, zombieFighter]);
+    console.log(team)
   };
 
   return (
-    <div className={isDarkMode ? "dark" : "light"}>
-      <h1>Zombie Game</h1>
-      <div>
-        Player Money: {money}
+    <>
+      <div className={isDarkMode ? "dark" : "light"}>
+        <h1>Zombie Game</h1>
+        <div>Player Money: {money}</div>
+        <div>
+          Your Team:
+          <ul>
+            {team.map((team) => (
+              <li key={team.id}>
+                <img src={team.img} alt="zombie" />
+                <br />
+                <strong>{team.name}</strong>
+                <br />
+                Strength: {team.strength}, Agility: {team.agility}, Price:{" "}
+                {team.price},
+              </li>
+            ))}
+          </ul>
+        </div>
+        Zombie List
+        <ul>
+          {zombieFighters.map((zombie) => (
+            <li key={zombie.id}>
+              <img src={zombie.img} alt="zombie" />
+              <br />
+              <strong>{zombie.name}</strong>
+              <br />
+              Strength: {zombie.strength}, Agility: {zombie.agility}, Price:{" "}
+              {zombie.price},
+              <br />
+              <button onClick={() => handleAddFighter({ zombie })}>
+                Add Zombie
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
-      <div>
-        Your Team: {team}
-      </div>
-      <ul>
-        {zombieFighters.map((zombie, index) => (
-          <li key={index.id}>
-            <img src={zombie.img} alt='zombie'/>
-            <br />
-            Strength: {zombie.strength}, Agility: {zombie.agility}, Price: {zombie.price},
-            <br />
-            <button onClick={() => handleAddFighter({zombie})}>Add Zombie</button>
-          </li>
-        ))}
-      </ul>
-    </div>
+    </>
   );
 };
 
