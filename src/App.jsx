@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./App.css";
 
 const App = () => {
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [mode, setMode] = useState("light");
   const [team, setTeam] = useState([]);
   const [money, setMoney] = useState(100);
   const [zombieFighters, setZombieFighters] = useState([
@@ -89,34 +89,85 @@ const App = () => {
   ]);
   console.log(zombieFighters);
 
-  const handleAddFighter = (zombieFighter) => {
-    const newZombieArray = [...zombieFighters, zombieFighter];
-    console.log(newZombieArray);
-    setZombieFighters(prevState => [...prevState])
-    setTeam(prevState => [...prevState, zombieFighter]);
-    console.log(team)
+  const handleMode = (modeValue) => {
+    console.log(modeValue);
+    setMode(modeValue);
   };
+
+  const handleAddFighter = (zombieFighter) => {
+    if (money >= zombieFighter.price) {
+      const selectedZombie = zombieFighters.filter(
+        (fighter) => fighter.id !== zombieFighter.id
+      );
+      console.log(selectedZombie);
+
+      setZombieFighters(selectedZombie);
+      setTeam((prevState) => [...prevState, zombieFighter]);
+      setMoney((prevState) => prevState - zombieFighter.price);
+      console.log(team);
+    } else {
+      return alert("Not enough money");
+    }
+  };
+
+  const handleRemoveFighter = (zombieFighter) => {
+    const updatedTeam = team.filter(
+      (fighter) => fighter.id !== zombieFighter.id
+    );
+
+    setTeam(updatedTeam);
+    setZombieFighters((prevState) => [...prevState, zombieFighter]);
+    setMoney((prevState) => prevState + zombieFighter.price);
+  };
+
+  const totalStrength = team.reduce(
+    (total, zombie) => total + zombie.strength,
+    0
+  );
+  const totalAgility = team.reduce(
+    (total, zombie) => total + zombie.agility,
+    0
+  );
+
+  console.log(totalStrength);
+  console.log(totalAgility);
 
   return (
     <>
-      <div className={isDarkMode ? "dark" : "light"}>
+      <div className={mode}>
         <h1>Zombie Game</h1>
+        <div>
+          <button onClick={() => handleMode("dark")}>Dark Mode</button>
+          <button onClick={() => handleMode("light")}>Light Mode</button>
+        </div>
         <div>Player Money: {money}</div>
         <div>
           Your Team:
           <ul>
-            {team.map((team) => (
-              <li key={team.id}>
-                <img src={team.img} alt="zombie" />
-                <br />
-                <strong>{team.name}</strong>
-                <br />
-                Strength: {team.strength}, Agility: {team.agility}, Price:{" "}
-                {team.price},
-              </li>
-            ))}
+            {team.length === 0 ? (
+              <p>Add some team members</p>
+            ) : (
+              team.map((team) => (
+                <li key={team.id}>
+                  <img src={team.img} alt="zombie" />
+                  <br />
+                  <strong>{team.name}</strong>
+                  <br />
+                  Strength: {team.strength}, Agility: {team.agility}, Price:{" "}
+                  {team.price},
+                  <br />
+                  <button onClick={() => handleRemoveFighter(team)}>
+                    Remove Zombie
+                  </button>
+                </li>
+              ))
+            )}
           </ul>
         </div>
+        <div>Total Strength : {totalStrength}</div>
+        <br />
+        <div>Total Agility : {totalAgility}</div>
+        <br />
         Zombie List
         <ul>
           {zombieFighters.map((zombie) => (
@@ -128,7 +179,7 @@ const App = () => {
               Strength: {zombie.strength}, Agility: {zombie.agility}, Price:{" "}
               {zombie.price},
               <br />
-              <button onClick={() => handleAddFighter({ zombie })}>
+              <button onClick={() => handleAddFighter(zombie)}>
                 Add Zombie
               </button>
             </li>
@@ -138,5 +189,4 @@ const App = () => {
     </>
   );
 };
-
 export default App;
