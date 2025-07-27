@@ -153,8 +153,12 @@ const App = () => {
                   <br />
                   <strong>{team.name}</strong>
                   <br />
-                  Strength: {team.strength}, Agility: {team.agility}, Price:{" "}
-                  {team.price},
+                  Strength: {team.strength}
+                  <br /> 
+                  Agility: {team.agility}
+                  <br />
+                  Price:{" "}
+                  {team.price}
                   <br />
                   <button onClick={() => handleRemoveFighter(team)}>
                     Remove Zombie
@@ -176,8 +180,12 @@ const App = () => {
               <br />
               <strong>{zombie.name}</strong>
               <br />
-              Strength: {zombie.strength}, Agility: {zombie.agility}, Price:{" "}
-              {zombie.price},
+              Strength: {zombie.strength}
+              <br /> 
+              Agility: {zombie.agility}
+              <br />
+              Price:{" "}
+              {zombie.price}
               <br />
               <button onClick={() => handleAddFighter(zombie)}>
                 Add Zombie
